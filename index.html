@@ -1,0 +1,188 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Sunflower-timelapse by tamboekie</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/github-dark.css">
+    <script src="javascripts/scale.fix.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Sunflower-timelapse</h1>
+        <p>Use a Raspberry Pi and Camera Module to create a timelapse of a sunflower growing</p>
+        <p class="view"><a href="https://github.com/tamboekie/sunflower-timelapse">View the Project on GitHub <small>tamboekie/sunflower-timelapse</small></a></p>
+        <ul>
+          <li><a href="https://github.com/tamboekie/sunflower-timelapse/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/tamboekie/sunflower-timelapse/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/tamboekie/sunflower-timelapse">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>
+<a id="sunflower-timelapse" class="anchor" href="#sunflower-timelapse" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>sunflower-timelapse</h1>
+
+<h2>
+<a id="introduction" class="anchor" href="#introduction" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Introduction</h2>
+
+<p>My son planted a sunflower seed at school and had to bring it home to look after it and watch it grow. I thought it would be good to use timelapse-photography as a way to capture the slow progress and play it back later.</p>
+
+<h2>
+<a id="quickstart" class="anchor" href="#quickstart" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Quickstart</h2>
+
+<ol>
+<li>Set up Raspberry Pi and Camera to take regular photos.</li>
+<li>Take the sequence of photos and turn them into a timelapse video.</li>
+</ol>
+
+<h3>
+<a id="set-up-the-camera" class="anchor" href="#set-up-the-camera" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Set up the camera</h3>
+
+<p>I have a Raspberry Pi Camera board v1. The following script seems to yield decent results:</p>
+
+<div class="highlight highlight-source-shell"><pre><span class="pl-c">#!/bin/bash</span>
+DATE=<span class="pl-s"><span class="pl-pds">$(</span>date +<span class="pl-s"><span class="pl-pds">"</span>%Y%m%d_%H%M%S<span class="pl-pds">"</span></span><span class="pl-pds">)</span></span>
+
+raspistill -q 97 -vf -hf -ex night -a 12 -o sun<span class="pl-smi">$DATE</span>.jpg -v
+raspistill -q 97 -vf -hf -ex night -a 12 -o matrix_drc/sun<span class="pl-smi">${DATE}</span>.jpg -v --awb flash --metering matrix --drc med</pre></div>
+
+<ul>
+<li>The script will create pictures named using date and time. This makes it easy to work with the files if you are looking for an images taken at any one moment. However, to create a video the files will need to be renamed later.</li>
+<li>
+<code>-q 97</code>: JPEG quality is 97.</li>
+<li>
+<code>-vf -hf</code>: Flip both the vertical and horizontal axis. Depends on how you mount your sensor.</li>
+<li>
+<code>-ex night</code>: Use night exposure. This seems to work well for daylight too, but allows the camera to choose longer exposures when the light is low.</li>
+<li>
+<code>--awb flash</code>: I decided to avoid the auto white baolance setting to make sure I get a persistent white balance across. frames. I choose the flash white balance setting setting since it yielded the best result where I was taking pictures.</li>
+<li>
+<code>--metering matrix</code>: Not actually sure if this performs better than 'average', but this is what I used anyway.</li>
+<li>
+<code>--drc med</code>: The dynamic range setting of medium yielded some extra detail in darker areas of the image. </li>
+</ul>
+
+<h3>
+<a id="copy-the-images-to-nas" class="anchor" href="#copy-the-images-to-nas" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Copy the images to NAS</h3>
+
+<div class="highlight highlight-source-shell"><pre>rsync -vvz -t -e ssh /home/pi/<span class="pl-k">*</span>.jpg fanus@sakkie.<span class="pl-k">local</span>:/media/data/fotos/sunflower/</pre></div>
+
+<ul>
+<li>Will use SSH and will prompt for password</li>
+<li>Add <code>-n</code> to do a dry-run and test the command</li>
+</ul>
+
+<h3>
+<a id="cropping" class="anchor" href="#cropping" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Cropping</h3>
+
+<p>Input images are 2592x1944, but target frame is 1920x1080, andno resizing is needed. Only cropping.</p>
+
+<ul>
+<li>Calculate X offset
+
+<ul>
+<li>Image width = 2592</li>
+<li>Target width = 1920</li>
+<li>X-offset = (2592 - 1920) / 2 = 336</li>
+</ul>
+</li>
+<li>Calculate Y offset
+
+<ul>
+<li>Image height = 1944</li>
+<li>Target width = 1080</li>
+<li>Y offset = (1944 - 1080) / 2 = 432</li>
+</ul>
+</li>
+</ul>
+
+<p>Now use <code>convert</code> <a href="http://www.imagemagick.org/script/convert.php">Imagemagick</a> to crop the images</p>
+
+<div class="highlight highlight-source-shell"><pre>convert <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$x</span><span class="pl-pds">"</span></span> -crop 1920x1080+336+432 <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$y</span><span class="pl-pds">"</span></span><span class="pl-k">;</span></pre></div>
+
+<h3>
+<a id="white-balance" class="anchor" href="#white-balance" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>White balance</h3>
+
+<p>Found a really useful script written by <a href="http://www.fmwconcepts.com/imagemagick/autowhite/index.php">Fred Weinhaus</a> called 'autowhite'. It managed to balance all images to an acceptable level without any further processing needed.</p>
+
+<div class="highlight highlight-source-shell"><pre>autowhite input.jpg output.png</pre></div>
+
+<p>I choose to output in PNG format to avoid further image qaulity loss.</p>
+
+<h3>
+<a id="deflicker" class="anchor" href="#deflicker" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Deflicker</h3>
+
+<p>Images may hav different exposures, so you will need to 'deflicker' them, or adjust exposure and possibly white balance.
+Try this:</p>
+
+<ul>
+<li>Original script: <a href="https://ubuntuforums.org/showthread.php?t=2022316">https://ubuntuforums.org/showthread.php?t=2022316</a>
+</li>
+<li><p>Another source for above <a href="https://github.com/rambo/timelapse/blob/master/timelapse-deflicker.pl">https://github.com/rambo/timelapse/blob/master/timelapse-deflicker.pl</a></p></li>
+<li><p>Different approach: <a href="http://im.snibgo.com/gainbias.htm">http://im.snibgo.com/gainbias.htm</a></p></li>
+</ul>
+
+<div class="highlight highlight-source-shell"><pre>sudo apt-get install libfile-type-perl libterm-progressbar-perl
+git clone https://github.com/cyberang3l/timelapse-deflicker/blob/master/timelapse-deflicker.pl
+<span class="pl-c1">cd</span> timelapse-deflicker
+./timelapse-deflicker -h</pre></div>
+
+<h3>
+<a id="rename-images" class="anchor" href="#rename-images" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Rename Images</h3>
+
+<p>Rename a folder full of images (in this case they are named according to date and time) to a numbered list:</p>
+
+<pre><code>ls sun20160808*.jpg| awk 'BEGIN{ a=0 }{ printf "mv %s img%06d.JPG\n", $0, a++ }' | bash
+</code></pre>
+
+<p>Or, you could just symlink them:</p>
+
+<pre><code>ls ~/matrix_drc/sun20160810*.jpg| awk 'BEGIN{ a=0 }{ printf "ln -s %s img%06d.JPG\n", $0, a++ }' | bash
+</code></pre>
+
+<p>If you wish to return to the original naming convention, these commands may help:</p>
+
+<div class="highlight highlight-source-shell"><pre>exiv2 rename -vtF -r <span class="pl-s"><span class="pl-pds">"</span>sun%Y%m%d_%H%M%S<span class="pl-pds">"</span></span> <span class="pl-k">*</span>.JPG
+find <span class="pl-c1">.</span> -name <span class="pl-s"><span class="pl-pds">'</span>*.JPG<span class="pl-pds">'</span></span> -exec rename <span class="pl-s"><span class="pl-pds">'</span>s/\.JPG/\.jpg/<span class="pl-pds">'</span></span> <span class="pl-s"><span class="pl-pds">'</span>{}<span class="pl-pds">'</span></span> <span class="pl-cce">\;</span></pre></div>
+
+<hr>
+
+<h3>
+<a id="video" class="anchor" href="#video" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Video</h3>
+
+<p>Encode the numbered images to an MP4, 15fps, Q=22</p>
+
+<pre><code>avconv -y -r 15 -i img%06d.JPG -r 15 -vcodec libx264 -crf 22.0 -vf crop=1920:1080,scale=iw:ih,unsharp,hqdn3d fullhd_unsharp2.mp4
+</code></pre>
+
+<ul>
+<li>Will crop the input images to 1080p. Not sure what will happen if inout is smaller.</li>
+<li>I find the unsharp filter helps with the soft images out of the RPi camera v1</li>
+<li>The hqdn3 filter reduces some noise, which in turn reduces file size,  but still preserves edges.</li>
+</ul>
+
+<hr>
+
+<h3>
+<a id="references" class="anchor" href="#references" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>References</h3>
+
+<p>Click <a href="http://techedemic.com/2014/09/18/creating-a-timelapse-clip-with-avconv/">here</a> for the orignal post.
+General timelapse info at <a href="http://www.learntimelapse.com/time-lapse-exposure-avoiding-flicker-and-dragging-shutter/">www.learntimelapse.com</a></p>
+      </section>
+    </div>
+    <footer>
+      <p>Project maintained by <a href="https://github.com/tamboekie">tamboekie</a></p>
+      <p>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></p>
+    </footer>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+    
+  </body>
+</html>
