@@ -18,3 +18,4 @@ This script is used to transfer the images captured by the Raspberry Pi camera t
 * Options
   * ```-r|--rate <number>``` will set the output video frame rate to <number>. The default is 60
   * ```-o|--outfile <filename>``` sets the output video to <filename>. The default is timelapse.mp4
+* Tested on Ubuntu 16.04
