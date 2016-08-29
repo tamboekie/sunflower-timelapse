@@ -43,18 +43,18 @@
 <h2>
 <a id="hardware" class="anchor" href="#hardware" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Hardware</h2>
 
-<p>I used a Raspberry Pi, a Camera Module and other miscellaneous bits to build the photography rig. The sunflower was placed in conservatory, as it offered good light. I did not want to try do this outdoors since that would involve weather-proofing the Pi and camera. Here's a short list of items I used:</p>
+<p>I used a Raspberry Pi, a Camera Module and other miscellaneous bits to build the photography rig. The sunflower was placed in the conservatory, as it offered good light. I did not want to try do this outdoors since that would involve weather-proofing the Pi and camera. Here's a short list of items I used:</p>
 
 <ul>
 <li>
-<a href="https://www.raspberrypi.org/learning/hardware-guide/components/raspberry-pi/">Raspberry Pi 3</a> with a small heatsink. Any model B Raspbery Pi will work for this project.</li>
+<a href="https://www.raspberrypi.org/learning/hardware-guide/components/raspberry-pi/">Raspberry Pi 3</a> with a small heat sink. Any model B Raspbery Pi will work for this project.</li>
 <li>Raspberry Pi <a href="https://www.raspberrypi.org/products/camera-module/">Camera Module V1</a>.</li>
 <li>An official <a href="http://cpc.farnell.com/stontronics/t5875dv/psu-raspberry-pi-5v-2-5a-multi/dp/SC14025">2.5A power supply</a>.</li>
 <li>A very rough wooden frame to position the camera where I wanted it.</li>
 <li>A home-made camera mount, angled to point at the sunflower, of course.</li>
 </ul>
 
-<p>The actual build of the frame and mount is not that important - I did the minimum to make sure it was fixed properly. I will add that a sturdy camera mount is very important. The camera module is nearly impossible to position without a mount - don't use a hot glue gun or Blu-Tack. I made my mount from small squire plastic bottle, cut down to the right size and then screwed into the wooden frame I made.
+<p>The actual build of the frame and camera mount is not that important - I did the minimum to make sure it was fixed properly. I will add that a sturdy camera mount is very important. The camera module is nearly impossible to position without a mount - don't use a hot glue gun or Blu-Tack. I made my mount from a small, squire plastic bottle, cut down to the right size and then screwed into the wooden frame I made.
 <img src="https://tamboekie.github.io/sunflower-timelapse/images/P1140737_crop.JPG" alt="camera mount complete"></p>
 
 <h2>
@@ -84,7 +84,7 @@
 <code>timelapse-deflicker</code> - follow instrcutions from <a href="https://github.com/cyberang3l/timelapse-deflicker">cyberang3l's github</a>.</li>
 </ul>
 
-<p>Run the commands below to install the dependancies:</p>
+<p>Run the commands below to install the dependencies:</p>
 
 <div class="highlight highlight-source-shell"><pre>sudo apt-get update
 sudo apt-get install ffmpeg imagemagick</pre></div>
@@ -119,7 +119,7 @@ raspistill -q 97 -vf -hf -ex night -a 12 -o sun<span class="pl-smi">$DATE</span>
 
 <div class="highlight highlight-source-shell"><pre>crontab -e</pre></div>
 
-<p>Then, just add this line</p>
+<p>Then, just add this line:</p>
 
 <pre lang="cron"><code>*/2    5-20     *       *       *       $HOME/sunflowercam.sh
 </code></pre>
