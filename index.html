@@ -202,8 +202,10 @@ Try this:</p>
 <ul>
 <li>Original script: <a href="https://ubuntuforums.org/showthread.php?t=2022316">https://ubuntuforums.org/showthread.php?t=2022316</a>
 </li>
-<li><p>Another source for above <a href="https://github.com/rambo/timelapse/blob/master/timelapse-deflicker.pl">https://github.com/rambo/timelapse/blob/master/timelapse-deflicker.pl</a></p></li>
-<li><p>Different approach: <a href="http://im.snibgo.com/gainbias.htm">http://im.snibgo.com/gainbias.htm</a></p></li>
+<li>Another source for above <a href="https://github.com/rambo/timelapse/blob/master/timelapse-deflicker.pl">https://github.com/rambo/timelapse/blob/master/timelapse-deflicker.pl</a>
+</li>
+<li>Different approach: <a href="http://im.snibgo.com/gainbias.htm">http://im.snibgo.com/gainbias.htm</a>
+</li>
 </ul>
 
 <div class="highlight highlight-source-shell"><pre>sudo apt-get install libfile-type-perl libterm-progressbar-perl
@@ -220,11 +222,11 @@ git clone https://github.com/cyberang3l/timelapse-deflicker/blob/master/timelaps
 
 <p>Or, you could just symlink them:</p>
 
-<div class="highlight highlight-source-shell"><pre>ls <span class="pl-k">~</span>/matrix_drc/sun20160810<span class="pl-k">*</span>.jpg<span class="pl-k">|</span> awk <span class="pl-s"><span class="pl-pds">'</span>BEGIN{ a=0 }{ printf "ln -s %s img%06d.JPG\n", $0, a++ }<span class="pl-pds">'</span></span> <span class="pl-k">|</span> bash
-<span class="pl-s"><span class="pl-pds">`</span><span class="pl-pds">`</span><span class="pl-pds">`</span>bash</span>
-<span class="pl-s">If you wish to <span class="pl-k">return</span> to the original naming convention, these commands may <span class="pl-c1">help</span>:</span>
-<span class="pl-s"><span class="pl-pds">`</span><span class="pl-pds">`</span><span class="pl-pds">`</span></span>bash
-exiv2 rename -vtF -r <span class="pl-s"><span class="pl-pds">"</span>sun%Y%m%d_%H%M%S<span class="pl-pds">"</span></span> <span class="pl-k">*</span>.JPG
+<div class="highlight highlight-source-shell"><pre>ls <span class="pl-k">~</span>/matrix_drc/sun20160810<span class="pl-k">*</span>.jpg<span class="pl-k">|</span> awk <span class="pl-s"><span class="pl-pds">'</span>BEGIN{ a=0 }{ printf "ln -s %s img%06d.JPG\n", $0, a++ }<span class="pl-pds">'</span></span> <span class="pl-k">|</span> bash</pre></div>
+
+<p>If you wish to return to the original naming convention, these commands may help:</p>
+
+<div class="highlight highlight-source-shell"><pre>exiv2 rename -vtF -r <span class="pl-s"><span class="pl-pds">"</span>sun%Y%m%d_%H%M%S<span class="pl-pds">"</span></span> <span class="pl-k">*</span>.JPG
 find <span class="pl-c1">.</span> -name <span class="pl-s"><span class="pl-pds">'</span>*.JPG<span class="pl-pds">'</span></span> -exec rename <span class="pl-s"><span class="pl-pds">'</span>s/\.JPG/\.jpg/<span class="pl-pds">'</span></span> <span class="pl-s"><span class="pl-pds">'</span>{}<span class="pl-pds">'</span></span> <span class="pl-cce">\;</span></pre></div>
 
 <hr>
