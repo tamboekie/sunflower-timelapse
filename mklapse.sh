@@ -31,12 +31,7 @@ input=`pwd`
 output=${input}/crop
 OUTFILE=out_mklapse.mp4
 
-# Use -gt 1 to consume two arguments per pass in the loop (e.g. each
-# argument has a corresponding value to go with it).
-# Use -gt 0 to consume one or more arguments per pass in the loop (e.g.
-# some arguments don't have a corresponding value to go with it such
-# as in the --default example).
-# note: if this is set to -gt 0 the /etc/hosts part is not recognized ( may be a bug )
+# command-line parsing
 while [[ $# -gt 1 ]]
 do
 key="$1"
@@ -56,16 +51,17 @@ case $key in
 esac
 shift # past argument or value
 done
+
+# display options
 echo "Frame Rate        = ${RATE}"
 echo "Output video file = ${OUTFILE}"
 echo "----------------------------------------------"
 
-
+# create output directory
 mkdir -p ${output}
 
-#
-# Process all JPG files in THIS folder
-#
+
+# Process all *.jpg files in THIS folder
 shopt -s nullglob
 for x in *.jpg;
 do
@@ -76,14 +72,11 @@ do
   convert "$x" -crop 1920x1080+336+432 "$y".png;
   # Now auto-white balance the PNG to JPEG
   autowhite "$y".png "$y"
+  rm "$y".png
 done
 
-
-# Remove temporary PNG files
+# Remove flicker between frames
 cd ${output}
-rm *.png
-
-# Now remove flicker between frames
 timelapse-deflicker.pl
 
 # Finally rename files and make a video
