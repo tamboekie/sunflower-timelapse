@@ -63,7 +63,7 @@
 <h3>
 <a id="raspberry-pi-installation" class="anchor" href="#raspberry-pi-installation" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Raspberry Pi installation</h3>
 
-<p>You will need to do some basic setup on the Raspberry Pi. It may be possible to do everything on the Pi, but I choose to most of the post-processing on my desktop machine</p>
+<p>You will need to do some basic setup on the Raspberry Pi. It may be possible to do everything on the Pi, but I chose to most of the post-processing on my desktop machine</p>
 
 <ul>
 <li>
@@ -81,7 +81,11 @@
 <li>ffmpeg and libavcodec-extra</li>
 <li>imagemagick (convert command)</li>
 <li>
-<code>timelapse-deflicker</code> - follow instrcutions from <a href="https://github.com/cyberang3l/timelapse-deflicker">cyberang3l's github</a>.</li>
+<code>timelapse-deflicker</code> - follow instrcutions from <a href="https://github.com/cyberang3l/timelapse-deflicker">cyberang3l's github</a>
+</li>
+<li>
+<code>autowhite</code> by <a href="http://www.fmwconcepts.com/imagemagick/autowhite/index.php">Fred Weinhaus</a>
+</li>
 </ul>
 
 <p>Run the commands below to install the dependencies:</p>
@@ -137,7 +141,7 @@ raspistill -q 97 -vf -hf -ex night -a 12 -o sun<span class="pl-smi">$DATE</span>
 <h3>
 <a id="copy-the-images-to-nas" class="anchor" href="#copy-the-images-to-nas" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Copy the images to NAS</h3>
 
-<p>As I choose to process the images on my desktop, I needed an easy way to copy images across from the Pi. I initially used sftp, but eventually found rsync faster:</p>
+<p>As I chose to process the images on my desktop, I needed an easy way to copy images across from the Pi. I initially used sftp, but eventually found rsync faster:</p>
 
 <div class="highlight highlight-source-shell"><pre>rsync -vvz -t -e ssh /home/pi/<span class="pl-k">*</span>.jpg user@hostname.<span class="pl-k">local</span>:/media/data/sunflower/</pre></div>
 
@@ -191,7 +195,7 @@ raspistill -q 97 -vf -hf -ex night -a 12 -o sun<span class="pl-smi">$DATE</span>
 
 <div class="highlight highlight-source-shell"><pre>autowhite input.jpg output.png</pre></div>
 
-<p>I choose to output in PNG format to avoid further image qaulity loss.</p>
+<p>I chose to output in PNG format to avoid further image quality loss.</p>
 
 <h3>
 <a id="deflicker" class="anchor" href="#deflicker" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Deflicker</h3>
