@@ -64,7 +64,6 @@ done
 # display options
 echo "Frame Rate        = ${RATE}"
 echo "Output video file = ${OUTFILE}"
-echo "$TMPDIR"
 echo "----------------------------------------------"
 
 # create output directory
@@ -96,5 +95,6 @@ ffmpeg -y -r "$RATE" -i img%06d.JPG -r "$RATE" -vcodec libx264 -preset slow -crf
 # move video from TMPDIR to INDIR
 mv "$OUTFILE" "$INDIR"
 cd "$INDIR"
+rm -rf "$TMPDIR"
 
 exit 0
