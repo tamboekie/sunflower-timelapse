@@ -21,33 +21,42 @@
 # SOFTWARE.
 #
 
-echo " "
-echo "mklapse, v0.1"
+echo ""
+echo "mklapse.sh, v0.1"
 echo "----------------------------------------------"
 
 # Globals settings
 RATE=60
-input=`pwd`
-output=${input}/crop
+INDIR=`pwd`
+TMPDIR=$(mktemp --tmpdir=${INDIR} -dt "$(basename $0).XXXXXXXXXX")
 OUTFILE=out_mklapse.mp4
 
 # command-line parsing
-while [[ $# -gt 1 ]]
+while [[ $# -gt 0 ]]
 do
 key="$1"
 
 case $key in
     -r|--rate)
-    RATE="$2"
-    shift # past argument
-    ;;
+        RATE="$2"
+        shift # past argument
+        ;;
     -o|--outfile)
-    OUTFILE="$2"
-    shift # past argument
-    ;;
+        OUTFILE="$2"
+        shift # past argument
+        ;;
+    -h|--help)
+        echo " -r|--rate <framerate>    Set frame rate. Default ${RATE}"
+        echo " -o|--outfile <filename>  Set output video filename. Default ${OUTFILE}"
+        echo " -h|--help                Print this help text"
+        echo ""
+        exit 0
+        ;;
     *)
-            # unknown option
-    ;;
+        # unknown option
+        echo "Error: Unknown option"
+        exit 1
+        ;;
 esac
 shift # past argument or value
 done
@@ -55,19 +64,19 @@ done
 # display options
 echo "Frame Rate        = ${RATE}"
 echo "Output video file = ${OUTFILE}"
+echo "$TMPDIR"
 echo "----------------------------------------------"
 
 # create output directory
-mkdir -p ${output}
-
+mkdir -p "$TMPDIR"
 
 # Process all *.jpg files in THIS folder
 shopt -s nullglob
 for x in *.jpg;
 do
-  echo Process "$x"
+  echo "Process $x"
   # Set destination file
-  y="$output"/"$x";
+  y="$TMPDIR"/"$x";
   # First crop to lossless PNG
   convert "$x" -crop 1920x1080+336+432 "$y".png;
   # Now auto-white balance the PNG to JPEG
@@ -76,12 +85,16 @@ do
 done
 
 # Remove flicker between frames
-cd ${output}
+cd "$TMPDIR"
 timelapse-deflicker.pl
 
 # Finally rename files and make a video
 cd Deflickered
 ls *.jpg| awk 'BEGIN{ a=0 }{ printf "mv %s img%06d.JPG\n", $0, a++ }' | bash
-ffmpeg -y -r "${RATE}" -i img%06d.JPG -r "${RATE}" -vcodec libx264 -preset slow -crf 18.0 -vf crop=1920:1080,scale=iw:ih,unsharp,hqdn3d "${OUTFILE}"
+ffmpeg -y -r "$RATE" -i img%06d.JPG -r "$RATE" -vcodec libx264 -preset slow -crf 18.0 -vf crop=1920:1080,scale=iw:ih,unsharp,hqdn3d "$OUTFILE"
+
+# move video from TMPDIR to INDIR
+mv "$OUTFILE" "$INDIR"
+cd "$INDIR"
 
 exit 0
