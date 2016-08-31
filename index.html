@@ -41,6 +41,18 @@
 <p>My son planted a sunflower seed at school and had to bring it home to look after it and watch it grow. I thought it would be good to use time-lapse photography as a way to capture the slow progress and play it back later. Below, I tried to document the various commands I used to make this happen. I will admit that none of this is perfect, but it is offered in the hope that someone may benefit from it. The assumption is that you have a basic understanding of the Linux terminal, but you may have not played with time-lapse photography before.</p>
 
 <h2>
+<a id="overview-of-the-project" class="anchor" href="#overview-of-the-project" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Overview of the project</h2>
+
+<p>The sunflower was left to grow quietly in a corner of the conservatory for the first part of it's life. I took regular photos of it's progress, but I did not time-lapse it yet. I wanted to capture the later stages - as it starts to get ready to flower - as a time-lapse. A Raspberry Pi is ideal for this work, since it is small enough to tuck away and forget about it. The RPi, camera and power supply was placed well outside the reach of small fingers. The camera module was angled slightly down to the where I hoped the sunflower would eventually open. I captured images from about 5am to 9pm every day, and then each day I would process the images into a video of the day. Soon I realised that I could script the simple commands and make life a bit easier. The only manual bit left was choosing the first and last image of the day: On cloudier days the first useful image was a bit later in the morning, and similarly, the last image of the day came sooner on cloudy days.<br>
+During the time-lapse capture, there were some issues I had to content with:</p>
+
+<ul>
+<li>The light levels vary substantially over the course of the day, and according to weather conditions. This made some images darker or lighter, which really bothers the eye as you play back the video. I had to compensate for brightness/exposure variations.</li>
+<li>Early (or late) in the day, the colour of sunlight changes as the angle of rays change through the atmosphere. A camera should try and capture the true image as the eye would perceive it, so I would not expect the camera to exactly compensate for this colour variation. I had to process the images and adjust the white balance.</li>
+<li>I have been blessed with two active little boys. They run. A lot. Through the conservatory. Add to this the odd windy day and you can imagine that the tall, dangley sunflower tends to sway a bit. The result was that some days the time-lapse video wasn't very good, and I had to discard these video. The days the family went out were the good days (for both us and the sunflower).</li>
+</ul>
+
+<h2>
 <a id="hardware" class="anchor" href="#hardware" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Hardware</h2>
 
 <p>I used a Raspberry Pi, a Camera Module and other miscellaneous bits to build the photography rig. The sunflower was placed in the conservatory, as it offered good light. I did not want to try do this outdoors since that would involve weather-proofing the Pi and camera. Here's a short list of items I used:</p>
@@ -75,7 +87,7 @@
 <h3>
 <a id="client-desktop-installation" class="anchor" href="#client-desktop-installation" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Client (desktop) installation</h3>
 
-<p>I use Ubuntu Linux as my desktop OS. I needed the following packages</p>
+<p>I use Ubuntu Linux as my desktop OS. I needed the following packages:</p>
 
 <ul>
 <li>ffmpeg and libavcodec-extra</li>
