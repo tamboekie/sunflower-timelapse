@@ -22,7 +22,7 @@
 #
 
 echo ""
-echo "mklapse.sh, v0.1.1"
+echo "mklapse.sh, v0.2.0"
 echo "----------------------------------------------"
 
 # Globals settings
