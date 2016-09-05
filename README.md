@@ -4,9 +4,9 @@
 These files are part of the ```sunflower-timelapse``` project. Full details are available at https://tamboekie.github.io/sunflower-timelapse/.
 
 ## sunflowercam.sh ##
-This script should be copied to your Raspberry Pi. Add a cron job to call it regurlarly - say once very 5 minutes.
-* Uses ```raspistill``` which is standard on Raspbian Wheezy / Jesse
-* Tested on Raspbian Jesse with a Raspberry Pi 3 and camera module v1
+This is a simple script to take images using a Raspberry Pi camera module. It should be copied to your Raspberry Pi and then add a cron job to call it regurlarly - say once very 5 minutes.
+* Uses `raspistill` which is standard on Raspbian Wheezy / Jesse
+* Tested on Raspbian Jesse with a Raspberry Pi 3 and camera module v1 (Any RPi should work).
 
 ## mklapse.sh ##
 This script is used to encode the images captured by the Raspberry Pi camera into a time-lapse video. It tries to compensate for exposure between images, as well as variations in white balance. You should run it in the folder where your JPEG images are stored. The file extenstions must be `*.jpg` and case is important.
