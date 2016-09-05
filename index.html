@@ -90,7 +90,8 @@ During the time-lapse capture, there were some issues I had to content with:</p>
 <p>I use Ubuntu Linux as my desktop OS. I needed the following packages:</p>
 
 <ul>
-<li>ffmpeg and libavcodec-extra</li>
+<li>ffmpeg</li>
+<li>git</li>
 <li>imagemagick (convert command)</li>
 <li>
 <code>timelapse-deflicker</code> - follow instrcutions from <a href="https://github.com/cyberang3l/timelapse-deflicker">cyberang3l's github</a>
@@ -102,8 +103,18 @@ During the time-lapse capture, there were some issues I had to content with:</p>
 
 <p>Run the commands below to install the dependencies:</p>
 
-<div class="highlight highlight-source-shell"><pre>sudo apt-get update
-sudo apt-get install ffmpeg libavcodec-extra imagemagick</pre></div>
+<div class="highlight highlight-source-shell"><pre><span class="pl-c"># install deps from repo</span>
+sudo apt-get update
+sudo apt-get install ffmpeg libavcodec-extra imagemagick git
+<span class="pl-c"># download and install scripts for current user into ~/bin</span>
+mkdir -p <span class="pl-k">~</span>/bin
+<span class="pl-c1">cd</span> <span class="pl-k">~</span>/bin
+git clone https://github.com/cyberang3l/timelapse-deflicker
+ln -s timelapse-deflicker/timelapse-deflicker.pl <span class="pl-c1">.</span>
+git clone https://github.com/tamboekie/sunflower-timelapse
+ln -s sunflower-timelapse/mklapse.sh</pre></div>
+
+<p><strong>NOTE</strong>: Finally, you must manually install (copy) the <code>autowhite</code> script into <code>~/bin</code> from <a href="http://www.fmwconcepts.com/imagemagick/autowhite/index.php">Fred Weinhaus</a>'s site. Do not forget to set it as executable by running <code>chmod +x ~/bin/autowhite</code>.</p>
 
 <h2>
 <a id="capture-the-photos" class="anchor" href="#capture-the-photos" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Capture the photos</h2>
