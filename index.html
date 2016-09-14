@@ -43,7 +43,7 @@
 <h2>
 <a id="overview-of-the-project" class="anchor" href="#overview-of-the-project" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Overview of the project</h2>
 
-<p>The sunflower was left to grow quietly in a corner of the conservatory for the first part of it's life. I took regular photos of it's progress, but I did not time-lapse it yet. I wanted to capture the later stages - as it starts to get ready to flower - as a time-lapse. A Raspberry Pi is ideal for this work, since it is small enough to tuck away and forget about it. The RPi, camera and power supply was placed well outside the reach of small fingers. The camera module was angled slightly down to the where I hoped the sunflower would eventually open. I captured images from about 5am to 9pm every day, and then each day I would process the images into a video of the day. Soon I realised that I could script the simple commands and make life a bit easier. The only manual bit left was choosing the first and last image of the day: On cloudier days the first useful image was a bit later in the morning, and similarly, the last image of the day came sooner on cloudy days.<br>
+<p>The sunflower was left to grow quietly in a corner of the conservatory for the first part of it's life. I took regular photos of it's progress, but I did not time-lapse it yet. I wanted to capture the later stages - as it starts to get ready to flower - as a time-lapse. A Raspberry Pi is ideal for this work, since it is small enough to tuck away and forget about it. The RPi, camera and power supply was placed well outside the reach of small fingers. The camera module was angled slightly down to the where I hoped the sunflower would eventually open. I captured images from about 5am to 9pm every day, and then each day I would process the images into a video of the day. Soon I realised that I could script the simple commands and make life a bit easier. The only manual bit left was choosing the first and last image of the day: On cloudier days the first useful image was a bit later in the morning, and similarly, the last image of the day came sooner on cloudy days.
 During the time-lapse capture, there were some issues I had to content with:</p>
 
 <ul>
@@ -94,7 +94,7 @@ During the time-lapse capture, there were some issues I had to content with:</p>
 <li>git</li>
 <li>imagemagick (convert command)</li>
 <li>
-<code>timelapse-deflicker</code> - follow instrcutions from <a href="https://github.com/cyberang3l/timelapse-deflicker">cyberang3l's github</a>
+<code>timelapse-deflicker</code> - follow instructions from <a href="https://github.com/cyberang3l/timelapse-deflicker">cyberang3l's github</a>
 </li>
 <li>
 <code>autowhite</code> by <a href="http://www.fmwconcepts.com/imagemagick/autowhite/index.php">Fred Weinhaus</a>
@@ -119,7 +119,7 @@ ln -s sunflower-timelapse/mklapse.sh</pre></div>
 <h2>
 <a id="capture-the-photos" class="anchor" href="#capture-the-photos" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Capture the photos</h2>
 
-<p>The command-line utlity to capture still images with the Raspberry Pi is called <a href="https://www.raspberrypi.org/documentation/raspbian/applications/camera.md">raspistill</a>. It can be used to grab images from the camera module and allows a full-control of the sensor. While it has a built-in time-lapse mode, I found that this was not very stable over long periods. I used cron to schedule the capture instead.</p>
+<p>The command-line utlity to capture still images with the Raspberry Pi is called <a href="https://www.raspberrypi.org/documentation/raspbian/applications/camera.md">raspistill</a>. It can be used to grab images from the camera module and allows a full-control of the sensor. While it has a built-in time-lapse mode, I found that this was not very stable over long periods. I used <a href="https://en.wikipedia.org/wiki/Cron">cron</a> to schedule the capture instead. Note that using cron means that you will not be able to capture faster that one frame per minute.</p>
 
 <p>A simple script is useful to hold all the settings for <code>raspistill</code>. This is better than adding all the settings directly to your cron job. I left most things at the default:</p>
 
@@ -171,8 +171,7 @@ raspistill -q 97 -vf -hf -ex night -a 12 -o sun<span class="pl-smi">$DATE</span>
 <ul>
 <li>Substitute your own <code>user</code> and <code>hostname</code> in the above command.</li>
 <li>Will use SSH and will prompt for password.</li>
-<li>Add <code>-n</code> to do a dry-run and test the command without doing any copying.<br>
-</li>
+<li>Add <code>-n</code> to do a dry-run and test the command without doing any copying.</li>
 </ul>
 
 <p><strong>Note</strong>: As I said above, make sure you have enough space and regularly remove old images from the Pi once you have them copied to a safe place.</p>
@@ -223,17 +222,7 @@ raspistill -q 97 -vf -hf -ex night -a 12 -o sun<span class="pl-smi">$DATE</span>
 <h3>
 <a id="deflicker" class="anchor" href="#deflicker" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Deflicker</h3>
 
-<p>Images may have different exposures, so you will need to 'deflicker' them, or adjust exposure and possibly white balance.
-Try this:</p>
-
-<ul>
-<li>Original script: <a href="https://ubuntuforums.org/showthread.php?t=2022316">https://ubuntuforums.org/showthread.php?t=2022316</a>
-</li>
-<li>Another source for above <a href="https://github.com/rambo/timelapse/blob/master/timelapse-deflicker.pl">https://github.com/rambo/timelapse/blob/master/timelapse-deflicker.pl</a>
-</li>
-<li>Different approach: <a href="http://im.snibgo.com/gainbias.htm">http://im.snibgo.com/gainbias.htm</a>
-</li>
-</ul>
+<p>Images exposure may vary substantially between images which will cause the timelapse video to flicker. One solution is to adjust the exposure of each image, looking at the average value of the last few frames. This is the approach of the <a href="https://github.com/cyberang3l/timelapse-deflicker">timelapse-deflicker</a> script. Get it on github:</p>
 
 <div class="highlight highlight-source-shell"><pre>sudo apt-get install libfile-type-perl libterm-progressbar-perl libimage-magick-perl libimage-exiftool-perl
 git clone https://github.com/cyberang3l/timelapse-deflicker
@@ -269,11 +258,16 @@ find <span class="pl-c1">.</span> -name <span class="pl-s"><span class="pl-pds">
 <li>The hqdn3 filter reduces some noise, which in turn reduces file size,  but still preserves edges.</li>
 </ul>
 
+<h3>
+<a id="putting-it-all-together" class="anchor" href="#putting-it-all-together" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Putting it all together</h3>
+
+<p>These concepts have been cobbled together in couple scripts at <a href="https://github.com/tamboekie/sunflower-timelapse">https://github.com/tamboekie/sunflower-timelapse</a>. The README shoudl explain how to install and use it.</p>
+
 <h2>
 <a id="references" class="anchor" href="#references" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>References</h2>
 
 <ul>
-<li>Click <a href="http://techedemic.com/2014/09/18/creating-a-timelapse-clip-with-avconv/">here</a> for the orignal post.</li>
+<li>Click <a href="http://techedemic.com/2014/09/18/creating-a-timelapse-clip-with-avconv/">here</a> for the idea that forms the basis of the work above.</li>
 <li>General timelapse info at <a href="http://www.learntimelapse.com/time-lapse-exposure-avoiding-flicker-and-dragging-shutter/">www.learntimelapse.com</a>
 </li>
 </ul>
