@@ -19,3 +19,6 @@ This script is used to encode the images captured by the Raspberry Pi camera int
   * `-o|--outfile <filename>` sets the output video to \<filename\>. The default is `out_mklapse.mp4`
   * `-f|--filter <hqdn3d settings>` Pass the settings directly to the hqdn3d filter. The default is `2:2:15:25`
 * Tested on Ubuntu 16.04
+
+## The timelapse ##
+The final video with timelapse portions can be seen on [Youtube](https://youtu.be/gPlqOmSYeZw).
