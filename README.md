@@ -22,4 +22,5 @@ This script is used to encode the images captured by the Raspberry Pi camera int
 
 ## The timelapse ##
 The final video with timelapse portions can be seen below:
+
 [![sunflower timelapse video](http://img.youtube.com/vi/gPlqOmSYeZw/mqdefault.jpg)](https://youtu.be/gPlqOmSYeZw)
