@@ -10,7 +10,7 @@ This is a simple script to take images using a Raspberry Pi camera module. It sh
 
 ## mklapse.sh ##
 This script is used to encode the images captured by the Raspberry Pi camera into a time-lapse video. It tries to compensate for exposure between images, as well as variations in white balance. You should run it in the folder where your JPEG images are stored. The file extenstions must be `*.jpg` and case is important.
-* Dependancies
+* Dependencies
   * ```autowhite``` script by [Fred Weinhaus](http://www.fmwconcepts.com/imagemagick/autowhite/index.php). This script is Copyright © Fred Weinhaus and is used with permission
   * ```timelapse-deflicker``` script from https://github.com/cyberang3l/timelapse-deflicker
   * ```ffmpeg``` and ```imagemagick``` packages from the repo
